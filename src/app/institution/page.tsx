@@ -1,4 +1,5 @@
-import { InstitutionPlaceholder } from "@/components/PlaceholderDashboard";
+import InstitutionDashboard from "@/components/institution/InstitutionDashboard";
+
 export default function InstitutionPage() {
-  return <InstitutionPlaceholder />;
+  return <InstitutionDashboard />;
 }

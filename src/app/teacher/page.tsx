@@ -1,4 +1,5 @@
-import { TeacherPlaceholder } from "@/components/PlaceholderDashboard";
+import TeacherDashboard from "@/components/teacher/TeacherDashboard";
+
 export default function TeacherPage() {
-  return <TeacherPlaceholder />;
+  return <TeacherDashboard />;
 }

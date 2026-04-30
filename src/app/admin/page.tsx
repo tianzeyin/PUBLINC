@@ -1,4 +1,5 @@
-import { AdminPlaceholder } from "@/components/PlaceholderDashboard";
+import AdminDashboard from "@/components/admin/AdminDashboard";
+
 export default function AdminPage() {
-  return <AdminPlaceholder />;
+  return <AdminDashboard />;
 }
