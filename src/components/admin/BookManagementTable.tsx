@@ -1,5 +1,6 @@
 import { books } from "@/data/adminMockData";
-import { ActionButtons, StatusBadge, TableShell } from "./TablePieces";
+import Link from "next/link";
+import { StatusBadge, TableShell } from "./TablePieces";
 
 export default function BookManagementTable() {
   return (
@@ -24,7 +25,20 @@ export default function BookManagementTable() {
             <td className="p-4 text-slate-600">{book.files}</td>
             <td className="p-4 text-slate-600">{book.updated}</td>
             <td className="p-4 pr-6">
-              <ActionButtons labels={["View Details", "Edit", "Delete", "Download Resources", "Manage Audio", "Manage Text/Content", "Subtitle Settings"]} />
+              <div className="flex min-w-40 flex-wrap gap-2">
+                <Link
+                  href={`/admin/book-detail?book=${book.id}`}
+                  className="rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-bold text-white hover:bg-blue-700"
+                >
+                  View Details
+                </Link>
+                <Link
+                  href={`/admin/book-edit?book=${book.id}`}
+                  className="rounded-lg bg-blue-50 px-2.5 py-1.5 text-xs font-bold text-blue-700 hover:bg-blue-100"
+                >
+                  Edit
+                </Link>
+              </div>
             </td>
           </tr>
         ))}

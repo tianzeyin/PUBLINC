@@ -1,6 +1,7 @@
 import { adminInstitutions } from "@/data/adminMockData";
+import Link from "next/link";
 import ProgressBar from "./ProgressBar";
-import { ActionButtons, ChipList, StatusBadge, TableShell } from "./TablePieces";
+import { ChipList, StatusBadge, TableShell } from "./TablePieces";
 
 export default function InstitutionManagementTable() {
   return (
@@ -23,7 +24,14 @@ export default function InstitutionManagementTable() {
             <td className="p-4"><ChipList values={inst.authorized} /></td>
             <td className="p-4"><ProgressBar progress={inst.usage} showText={false} /></td>
             <td className="p-4"><StatusBadge status={inst.status} /></td>
-            <td className="p-4 pr-6"><ActionButtons labels={["Edit", "Manage Account", "Authorize Books/Courses/Packages", "View Usage", "Disable/Enable"]} /></td>
+            <td className="p-4 pr-6">
+              <Link
+                href={`/admin/institution-edit?institution=${inst.id}`}
+                className="rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-bold text-white hover:bg-blue-700"
+              >
+                Edit
+              </Link>
+            </td>
           </tr>
         ))}
       </tbody>

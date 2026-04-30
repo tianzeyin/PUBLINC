@@ -1,6 +1,7 @@
 import { adminCourses } from "@/data/adminMockData";
+import Link from "next/link";
 import ProgressBar from "./ProgressBar";
-import { ActionButtons, StatusBadge, TableShell } from "./TablePieces";
+import { StatusBadge, TableShell } from "./TablePieces";
 
 export default function CourseManagementTable() {
   return (
@@ -22,7 +23,14 @@ export default function CourseManagementTable() {
             <td className="p-4 text-slate-600">{course.institutions}</td>
             <td className="p-4"><ProgressBar progress={course.progress} showText={false} /></td>
             <td className="p-4 text-slate-600">{course.updated}</td>
-            <td className="p-4 pr-6"><ActionButtons labels={["Edit Course", "Delete Course", "Add Books", "Remove Books", "Set Course Level", "Set Course Status", "Authorize to Institution", "View Course Progress"]} /></td>
+            <td className="p-4 pr-6">
+              <Link
+                href={`/admin/course-edit?course=${course.id}`}
+                className="rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-bold text-white hover:bg-blue-700"
+              >
+                Edit Course
+              </Link>
+            </td>
           </tr>
         ))}
       </tbody>

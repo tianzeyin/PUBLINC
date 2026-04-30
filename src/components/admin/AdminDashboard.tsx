@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import AdminLayout from "./AdminLayout";
 import type { AdminView } from "./AdminSidebar";
 import AdminStatCard from "./AdminStatCard";
 import AdminUserTable from "./AdminUserTable";
-import AuthorizationPanelMock from "./AuthorizationPanelMock";
 import BookManagementTable from "./BookManagementTable";
 import CourseManagementTable from "./CourseManagementTable";
 import { CourseBookLearningTable, InstitutionLearningTable } from "./LearningStatisticsTable";
@@ -13,10 +13,13 @@ import InstitutionManagementTable from "./InstitutionManagementTable";
 import ProgressBar from "./ProgressBar";
 import ResourceFileTable from "./ResourceFileTable";
 import UploadPanelMock from "./UploadPanelMock";
-import { adminStats, books, chartCards, learningStatsCards, platformOverview } from "@/data/adminMockData";
+import { adminStats, chartCards, learningStatsCards, platformOverview } from "@/data/adminMockData";
 
 export default function AdminDashboard() {
-  const [activeView, setActiveView] = useState<AdminView>("dashboard");
+  const searchParams = useSearchParams();
+  const section = searchParams.get("section");
+  const initialView = isAdminView(section) ? section : "dashboard";
+  const [activeView, setActiveView] = useState<AdminView>(initialView);
 
   return (
     <AdminLayout activeView={activeView} onSelect={setActiveView}>
@@ -29,6 +32,10 @@ export default function AdminDashboard() {
       {activeView === "settings" && <AdminSettings />}
     </AdminLayout>
   );
+}
+
+function isAdminView(value: string | null): value is AdminView {
+  return value === "dashboard" || value === "books" || value === "resources" || value === "institutions" || value === "courses" || value === "statistics" || value === "settings";
 }
 
 function PageHeader({ title, description }: { title: string; description?: string }) {
@@ -97,38 +104,12 @@ function DashboardHome({ onSelect }: { onSelect: (view: AdminView) => void }) {
 }
 
 function BookManagement() {
-  const firstBook = books[0];
-
   return (
     <>
       <PageHeader title="Book Management" description="Manage book metadata, content, audio, subtitles, and downloadable resources." />
       <ActionBar labels={["Add Book", "Batch Import Books", "Download Resource Files"]} />
       <FilterBar searchPlaceholder="Search books" filters={["Filter by level", "Filter by course", "Filter by status", "Sort by updated date"]} />
       <div className="mb-8"><BookManagementTable /></div>
-
-      <SectionTitle accent="emerald">Book Detail Panel</SectionTitle>
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="grid gap-6 lg:grid-cols-[180px_1fr]">
-          <div className="flex h-56 items-center justify-center rounded-2xl border border-blue-100 bg-blue-50 text-2xl font-extrabold text-blue-700">BOOK</div>
-          <div>
-            <h3 className="text-2xl font-extrabold text-slate-900">{firstBook.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600">{firstBook.description}</p>
-            <div className="mt-5 grid gap-3 md:grid-cols-3">
-              <InfoTile label="Level" value={firstBook.level} />
-              <InfoTile label="Course/album" value={firstBook.course} />
-              <InfoTile label="Reading status" value="Published" />
-              <InfoTile label="Audio file status" value={firstBook.audioStatus} />
-              <InfoTile label="Text/content status" value={firstBook.contentStatus} />
-              <InfoTile label="Subtitle status" value={firstBook.subtitleStatus} />
-            </div>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {["Edit Book Information", "Delete Book", "Download Resource Files", "Manage Book Audio", "Manage Book Text/Content", "Subtitle Settings"].map((label) => (
-                <ActionButton key={label} label={label} variant="light" />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
     </>
   );
 }
@@ -161,7 +142,6 @@ function InstitutionManagement() {
       <ActionBar labels={["Create Institution Account", "Export Institution List"]} />
       <FilterBar searchPlaceholder="Search institutions" filters={["Filter by status", "Filter by authorized course", "Sort by usage"]} />
       <div className="mb-8"><InstitutionManagementTable /></div>
-      <AuthorizationPanelMock />
     </>
   );
 }
@@ -173,30 +153,6 @@ function CourseManagement() {
       <ActionBar labels={["Create Course", "Add Books to Course", "Authorize Course to Institution", "Export Course List"]} />
       <FilterBar searchPlaceholder="Search course" filters={["Filter by level", "Filter by status", "Sort by number of books"]} />
       <div className="mb-8"><CourseManagementTable /></div>
-      <SectionTitle accent="emerald">Books Inside Selected Course</SectionTitle>
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[760px] text-left">
-            <thead>
-              <tr className="border-b border-slate-200 bg-slate-50 text-xs font-bold uppercase tracking-wide text-slate-500">
-                {["Book title", "Level", "Audio status", "Text/content status", "Subtitle status", "Actions"].map((heading) => <th key={heading} className="p-4 first:pl-6 last:pr-6">{heading}</th>)}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {books.map((book) => (
-                <tr key={book.id} className="text-sm hover:bg-slate-50/60">
-                  <td className="p-4 pl-6 font-bold text-slate-900">{book.title}</td>
-                  <td className="p-4 text-slate-600">{book.level}</td>
-                  <td className="p-4 text-slate-600">{book.audioStatus}</td>
-                  <td className="p-4 text-slate-600">{book.contentStatus}</td>
-                  <td className="p-4 text-slate-600">{book.subtitleStatus}</td>
-                  <td className="p-4 pr-6"><div className="flex gap-2"><ActionButton label="Remove from Course" variant="light" /><ActionButton label="View Book" variant="light" /><ActionButton label="Edit Book" variant="light" /></div></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
     </>
   );
 }
@@ -281,15 +237,6 @@ function ActionButton({ label, variant = "solid", onClick }: { label: string; va
     >
       {label}
     </button>
-  );
-}
-
-function InfoTile({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-      <p className="text-xs font-bold uppercase tracking-wide text-slate-400">{label}</p>
-      <p className="mt-1 text-sm font-extrabold text-slate-900">{value}</p>
-    </div>
   );
 }
 
