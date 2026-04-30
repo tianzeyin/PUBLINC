@@ -5,8 +5,7 @@ import { usePathname } from "next/navigation";
 
 const navItems = [
   { name: "Student Home", href: "/student", icon: "🏠" },
-  { name: "Reading Library", href: "/student/library", icon: "📚" },
-  { name: "Book Detail", href: "/student/book-detail", icon: "📖" },
+  { name: "Available Books", href: "/student/library", icon: "📚" },
   { name: "Reading / Audio Player", href: "/student/player", icon: "🎧" },
   { name: "Learning History", href: "/student/history", icon: "🗓️" },
   { name: "Learning Report", href: "/student/report", icon: "📊" },

@@ -49,7 +49,7 @@ export default function BookCard({
              <ProgressBar progress={progress} colorClass={status === 'Completed' ? 'bg-green-500' : 'bg-blue-500'} />
           </div>
           <Link
-            href={`/student/book-detail`}
+            href={`/student/book-detail?book=${id}`}
             className="block w-full py-2 text-center text-sm font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-colors"
           >
             Open Book Detail
