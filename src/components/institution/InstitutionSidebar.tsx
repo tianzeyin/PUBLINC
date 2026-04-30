@@ -15,7 +15,7 @@ export const institutionNavItems: { name: string; view: InstitutionView; icon: s
   { name: "Teacher Management", view: "teachers", icon: "T" },
   { name: "Class Management", view: "classes", icon: "C" },
   { name: "Course Management", view: "courses", icon: "B" },
-  { name: "Account Opening / Expiry", view: "accounts", icon: "A" },
+  { name: "Account Management", view: "accounts", icon: "A" },
   { name: "Personal Center", view: "personal", icon: "P" },
 ];
 

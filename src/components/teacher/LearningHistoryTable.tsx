@@ -1,7 +1,18 @@
 import { learningHistory } from "@/data/teacherMockData";
 
-export default function LearningHistoryTable({ preview = false }: { preview?: boolean }) {
-  const rows = preview ? learningHistory.slice(0, 3) : learningHistory;
+export default function LearningHistoryTable({
+  preview = false,
+  studentName,
+  showStudentName = true,
+}: {
+  preview?: boolean;
+  studentName?: string;
+  showStudentName?: boolean;
+}) {
+  const filteredRows = studentName
+    ? learningHistory.filter((row) => row.studentName === studentName)
+    : learningHistory;
+  const rows = preview ? filteredRows.slice(0, 3) : filteredRows;
 
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -9,8 +20,8 @@ export default function LearningHistoryTable({ preview = false }: { preview?: bo
         <table className="w-full min-w-[980px] border-collapse text-left">
           <thead>
             <tr className="border-b border-slate-200 bg-slate-50 text-xs font-bold uppercase tracking-wide text-slate-500">
-              <th className="p-4 pl-6">Student name</th>
-              <th className="p-4">Book title</th>
+              {showStudentName && <th className="p-4 pl-6">Student name</th>}
+              <th className={showStudentName ? "p-4" : "p-4 pl-6"}>Book title</th>
               <th className="p-4">Course name</th>
               <th className="p-4">Reading date</th>
               <th className="p-4">Listening time</th>
@@ -23,8 +34,8 @@ export default function LearningHistoryTable({ preview = false }: { preview?: bo
           <tbody className="divide-y divide-slate-100">
             {rows.map((row) => (
               <tr key={row.id} className="text-sm transition-colors hover:bg-slate-50/60">
-                <td className="p-4 pl-6 font-bold text-slate-900">{row.studentName}</td>
-                <td className="p-4 font-semibold text-slate-700">{row.bookTitle}</td>
+                {showStudentName && <td className="p-4 pl-6 font-bold text-slate-900">{row.studentName}</td>}
+                <td className={showStudentName ? "p-4 font-semibold text-slate-700" : "p-4 pl-6 font-semibold text-slate-700"}>{row.bookTitle}</td>
                 <td className="p-4 text-slate-600">{row.courseName}</td>
                 <td className="p-4 text-slate-500">{row.readingDate}</td>
                 <td className="p-4 text-slate-600">{row.listeningTime}</td>
@@ -49,6 +60,13 @@ export default function LearningHistoryTable({ preview = false }: { preview?: bo
                 <td className="p-4 pr-6 text-right font-extrabold text-indigo-600">{row.score}</td>
               </tr>
             ))}
+            {rows.length === 0 && (
+              <tr>
+                <td colSpan={showStudentName ? 9 : 8} className="p-6 text-center text-sm font-semibold text-slate-500">
+                  No learning history for this student yet.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

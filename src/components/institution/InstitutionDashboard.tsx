@@ -108,7 +108,7 @@ function StudentManagement() {
   return (
     <>
       <PageHeader title="Student Management" description="Manage student accounts, classes, course assignment, status, and expiry dates." />
-      <ActionBar labels={["Create Student Account", "Batch Create Student Accounts", "Export Student List"]} />
+      <ActionBar labels={["Create Student Account", "Export Student List"]} />
       <FilterBar searchPlaceholder="Search students" filters={["Filter by class", "Filter by account status", "Filter by assigned course", "Sort by expiry date"]} />
       <div className="mb-8">
         <StudentManagementTable />
@@ -116,7 +116,6 @@ function StudentManagement() {
       <SectionTitle accent="emerald">Student Account Forms</SectionTitle>
       <div className="grid gap-4 lg:grid-cols-2">
         <InstitutionFormMock title="Create student account" fields={["Student name", "Phone/account", "Initial class", "Assigned courses"]} actionLabel="Create Student Account" />
-        <InstitutionFormMock title="Batch create student accounts" fields={["Upload file", "Default class", "Default expiry date", "Assigned courses"]} actionLabel="Batch Create Accounts" />
         <InstitutionFormMock title="Edit student information" fields={["Student name", "Phone/account", "Class", "Account status"]} actionLabel="Save Student Changes" />
         <InstitutionFormMock title="Assign student to class" fields={["Select student", "Select class", "Effective date"]} actionLabel="Assign Class" />
         <InstitutionFormMock title="Reset student password" fields={["Select student", "New password", "Confirm password"]} actionLabel="Reset Password" />
@@ -193,8 +192,8 @@ function CourseManagement() {
 function AccountOpeningExpiry() {
   return (
     <>
-      <PageHeader title="Account Opening / Account Expiry" description="Open accounts, extend validity, and review accounts close to expiry." />
-      <ActionBar labels={["Open New Student Accounts", "Open New Teacher Accounts", "Batch Open Accounts", "Extend Account Validity", "Disable Expired Accounts"]} />
+      <PageHeader title="Account Management" description="Open accounts, extend validity, and review accounts close to expiry." />
+      <ActionBar labels={["Open New Student Accounts", "Open New Teacher Accounts", "Extend Account Validity", "Disable Expired Accounts"]} />
       <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {accountSummary.map((stat) => (
           <InstitutionStatCard key={stat.label} {...stat} />

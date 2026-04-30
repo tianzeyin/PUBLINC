@@ -38,7 +38,6 @@ export default function TeacherDashboard() {
       {activeView === "class-detail" && <ClassDetail onSelect={setActiveView} />}
       {activeView === "students" && <StudentList onSelect={setActiveView} />}
       {activeView === "student-detail" && <StudentDetail />}
-      {activeView === "history" && <StudentLearningHistory />}
       {activeView === "report" && <ClassLearningReport />}
       {activeView === "course-progress" && <CourseBookProgress />}
       {activeView === "account" && <AccountManagement />}
@@ -87,35 +86,33 @@ function TeacherHome({ onSelect }: { onSelect: (view: TeacherView) => void }) {
         ))}
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_0.9fr]">
-        <section>
-          <SectionTitle>My Classes</SectionTitle>
-          <div className="grid gap-5 lg:grid-cols-3">
-            {teacherClasses.map((classItem) => (
-              <ClassCard key={classItem.id} {...classItem} onViewDetail={() => onSelect("class-detail")} />
+      <section className="mb-8">
+        <SectionTitle>My Classes</SectionTitle>
+        <div className="grid gap-5 lg:grid-cols-3">
+          {teacherClasses.map((classItem) => (
+            <ClassCard key={classItem.id} {...classItem} onViewDetail={() => onSelect("class-detail")} />
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <SectionTitle accent="sky">Today&apos;s Learning Activity</SectionTitle>
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="divide-y divide-slate-100">
+            {todayActivities.map((activity, index) => (
+              <div key={activity.id} className="flex items-start gap-4 p-5">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-sm font-extrabold text-emerald-700">
+                  {index + 1}
+                </div>
+                <div>
+                  <p className="font-bold text-slate-900">{activity.student}</p>
+                  <p className="mt-1 text-sm text-slate-600">{activity.detail}</p>
+                </div>
+              </div>
             ))}
           </div>
-        </section>
-
-        <section>
-          <SectionTitle accent="sky">Today&apos;s Learning Activity</SectionTitle>
-          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div className="divide-y divide-slate-100">
-              {todayActivities.map((activity, index) => (
-                <div key={activity.id} className="flex items-start gap-4 p-5">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-sm font-extrabold text-emerald-700">
-                    {index + 1}
-                  </div>
-                  <div>
-                    <p className="font-bold text-slate-900">{activity.student}</p>
-                    <p className="mt-1 text-sm text-slate-600">{activity.detail}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </>
   );
 }
@@ -216,7 +213,7 @@ function StudentList({ onSelect }: { onSelect: (view: TeacherView) => void }) {
 function StudentDetail() {
   return (
     <>
-      <PageHeader title="Student Detail" description="A focused profile and learning snapshot for Li Ming." />
+      <PageHeader title="Student Detail" description="A focused profile, assigned readings, and complete learning history for Li Ming." />
       <div className="mb-8">
         <StudentDetailCard />
       </div>
@@ -237,22 +234,9 @@ function StudentDetail() {
       </div>
 
       <div>
-        <SectionTitle accent="sky">Student Learning History Preview</SectionTitle>
-        <LearningHistoryTable preview />
+        <SectionTitle accent="sky">Student Learning History</SectionTitle>
+        <LearningHistoryTable studentName={studentDetail.name} showStudentName={false} />
       </div>
-    </>
-  );
-}
-
-function StudentLearningHistory() {
-  return (
-    <>
-      <PageHeader title="Student Learning History" description="Mock history across students, courses, reading dates, and completion states." />
-      <FilterBar
-        searchPlaceholder="Search learning history"
-        filters={["Filter by student", "Filter by course", "Filter by completion status", "Date range"]}
-      />
-      <LearningHistoryTable />
     </>
   );
 }
