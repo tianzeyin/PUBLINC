@@ -129,3 +129,57 @@ export const audioPlayerData = {
   lastPosition: "Chapter 1, Paragraph 8",
   timestamp: "2026-05-04 14:30",
 };
+
+export const audioBookDetails: Record<
+  string,
+  { courseId: string; courseName: string; chapter: string; text: string[]; duration: string; current: string }
+> = {
+  "book-1": {
+    courseId: "COURSE-ENG-01",
+    courseName: "English Reading Level 1",
+    chapter: "Chapter 1: The Journey Begins...",
+    duration: "18:40",
+    current: "02:15",
+    text: [
+      "Once when I was six years old I saw a magnificent picture in a book, called True Stories from Nature, about the primeval forest.",
+      "In the book it said: \"Boa constrictors swallow their prey whole, without chewing it. After that they are not able to move.\"",
+      "I pondered deeply, then, over the adventures of the jungle. And after some work with a colored pencil I succeeded in making my first drawing.",
+    ],
+  },
+  "book-2": {
+    courseId: "COURSE-ENG-01",
+    courseName: "English Reading Level 1",
+    chapter: "Unit 1: Forest Friends",
+    duration: "12:10",
+    current: "00:00",
+    text: [
+      "The small rabbit looked across the green field and listened carefully.",
+      "A bird sang from the tall tree, and the rabbit followed the sound through the morning light.",
+      "Every animal in the forest had a story to tell.",
+    ],
+  },
+  "book-3": {
+    courseId: "COURSE-EXT-01",
+    courseName: "Reading Extension Course",
+    chapter: "Chapter 2: Across the Mountain",
+    duration: "24:30",
+    current: "24:30",
+    text: [
+      "The travelers crossed the high mountain road before sunset.",
+      "They carried books, food, and a promise to keep moving forward.",
+      "The journey was difficult, but each step made them stronger.",
+    ],
+  },
+  "book-4": {
+    courseId: "COURSE-AUD-01",
+    courseName: "Audio Reading Practice",
+    chapter: "Lesson 3: How Plants Grow",
+    duration: "16:25",
+    current: "05:45",
+    text: [
+      "Plants need sunlight, water, and air to grow well.",
+      "Roots take water from the soil, while leaves use sunlight to make food.",
+      "When students observe a plant every day, they can see small changes become big changes.",
+    ],
+  },
+};

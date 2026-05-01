@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 
 const navItems = [
   { name: "Student Home", href: "/student", icon: "🏠" },
-  { name: "Available Books", href: "/student/library", icon: "📚" },
-  { name: "Reading / Audio Player", href: "/student/player", icon: "🎧" },
+  { name: "My Classes", href: "/student/classes", icon: "🎓" },
+  { name: "Books / Audio", href: "/student/library", icon: "🎧" },
   { name: "Learning History", href: "/student/history", icon: "🗓️" },
   { name: "Learning Report", href: "/student/report", icon: "📊" },
   { name: "Personal Center", href: "/student/profile", icon: "👤" },
@@ -29,7 +29,7 @@ export default function StudentSidebar() {
 
       <nav className="flex-1 overflow-y-auto p-4 space-y-1">
         {navItems.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive = pathname === item.href || (item.href === "/student/classes" && pathname.startsWith("/student/classes/"));
           return (
             <Link
               key={item.name}

@@ -43,7 +43,7 @@ export default function CourseCard({
         </div>
 
         <Link
-          href={`/student/library?course=${id}`}
+          href={`/student/classes/detail?course=${id}`}
           className="block w-full py-2.5 text-center text-sm font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition-colors border border-indigo-100/50"
         >
           Enter Course

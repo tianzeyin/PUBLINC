@@ -50,7 +50,7 @@ export default function StudentHomePage() {
                <p className="text-sm text-slate-500">English Reading Level 1 • 60% Complete</p>
              </div>
           </div>
-          <Link href="/student/player" className="px-5 py-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-semibold text-sm rounded-xl transition-colors border border-emerald-100">
+          <Link href="/student/library?book=book-1" className="px-5 py-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-semibold text-sm rounded-xl transition-colors border border-emerald-100">
             Continue
           </Link>
         </div>
