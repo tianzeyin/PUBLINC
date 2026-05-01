@@ -57,12 +57,6 @@ export default function Header() {
             >
               Login
             </Link>
-            <Link
-              href="/login"
-              className="px-4 py-2 text-sm font-medium text-white btn-primary rounded-lg shadow-sm"
-            >
-              Sign Up
-            </Link>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -99,12 +93,6 @@ export default function Header() {
               className="flex-1 text-center px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
             >
               Login
-            </Link>
-            <Link
-              href="/login"
-              className="flex-1 text-center px-4 py-2 text-sm font-medium text-white btn-primary rounded-lg"
-            >
-              Sign Up
             </Link>
           </div>
         </div>

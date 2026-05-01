@@ -2,6 +2,9 @@ import Link from "next/link";
 import { demoRoles } from "@/data/mockData";
 
 export default function LoginPage() {
+  const mainRoles = demoRoles.filter((role) => role.id !== "admin");
+  const adminRole = demoRoles.find((role) => role.id === "admin");
+
   return (
     <div className="min-h-screen hero-bg flex flex-col justify-center items-center px-4 py-16">
       {/* Back to home */}
@@ -43,24 +46,24 @@ export default function LoginPage() {
         </div>
 
         {/* Role cards */}
-        <div className="grid sm:grid-cols-2 gap-4">
-          {demoRoles.map((role) => (
+        <div className="grid gap-4 md:grid-cols-3">
+          {mainRoles.map((role) => (
             <Link
               key={role.id}
               href={role.href}
-              className={`group relative bg-white border border-slate-100 rounded-2xl p-6 shadow-sm hover:shadow-lg ${role.shadow} card-hover transition-all duration-300 flex flex-col`}
+              className={`group relative bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-lg ${role.shadow} card-hover transition-all duration-300 flex flex-col`}
             >
               {/* Gradient top bar */}
               <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${role.gradient} rounded-t-2xl`} />
 
               {/* Icon */}
-              <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${role.gradient} flex items-center justify-center text-2xl text-white shadow-md mb-4 transition-transform duration-300 group-hover:scale-110`}>
+              <div className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${role.gradient} flex items-center justify-center text-xl text-white shadow-md mb-4 transition-transform duration-300 group-hover:scale-110`}>
                 {role.icon}
               </div>
 
               <div className="flex-1">
                 <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">{role.subtitle}</p>
-                <h2 className="text-xl font-bold text-slate-800 mb-2">{role.title}</h2>
+                <h2 className="text-lg font-bold text-slate-800 mb-2">{role.title}</h2>
                 <p className="text-slate-500 text-sm leading-relaxed mb-5">{role.description}</p>
               </div>
 
@@ -74,6 +77,17 @@ export default function LoginPage() {
             </Link>
           ))}
         </div>
+
+        {adminRole && (
+          <div className="mt-6 flex justify-center">
+            <Link
+              href={adminRole.href}
+              className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white/70 px-3 py-2 text-xs font-semibold text-slate-500 shadow-sm transition-colors hover:bg-white hover:text-slate-700"
+            >
+              Admin access
+            </Link>
+          </div>
+        )}
 
         {/* Disclaimer */}
         <p className="text-center text-xs text-slate-400 mt-8">
