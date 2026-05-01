@@ -13,6 +13,11 @@ import TeacherProfileCard from "./TeacherProfileCard";
 import TeacherStatCard from "./TeacherStatCard";
 import type { TeacherView } from "./TeacherSidebar";
 import {
+  assignedCourses,
+  audioBookDetails,
+  libraryBooks,
+} from "@/data/studentMockData";
+import {
   assignedReadings,
   classDetail,
   classRanking,
@@ -38,6 +43,7 @@ export default function TeacherDashboard() {
       {activeView === "class-detail" && <ClassDetail onSelect={setActiveView} />}
       {activeView === "students" && <StudentList onSelect={setActiveView} />}
       {activeView === "student-detail" && <StudentDetail />}
+      {activeView === "resources" && <TeacherResourceManagement />}
       {activeView === "report" && <ClassLearningReport />}
       {activeView === "course-progress" && <CourseBookProgress />}
       {activeView === "account" && <AccountManagement />}
@@ -185,12 +191,73 @@ function ClassDetail({ onSelect }: { onSelect: (view: TeacherView) => void }) {
         </div>
       </div>
 
-      <div>
+      <div className="mb-8">
         <SectionTitle accent="sky">Class Reading Progress</SectionTitle>
         <div className="grid gap-4 lg:grid-cols-3">
           <ProgressPanel title="Overall class progress" progress={classDetail.classReadingProgress} />
           <ProgressPanel title="Completed students percentage" progress={classDetail.completedStudentsPercentage} colorClass="bg-blue-500" />
           <ProgressPanel title="Active students percentage" progress={classDetail.activeStudentsPercentage} colorClass="bg-sky-500" />
+        </div>
+      </div>
+
+      <div>
+        <SectionTitle accent="blue">Class Video Recordings</SectionTitle>
+        <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+          <section className="rounded-2xl border border-dashed border-blue-200 bg-blue-50/60 p-6 shadow-sm">
+            <div className="flex min-h-52 flex-col items-center justify-center text-center">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-sm font-extrabold text-blue-700 shadow-sm">
+                UP
+              </div>
+              <h3 className="text-lg font-extrabold text-slate-900">Upload Class Recording</h3>
+              <p className="mt-2 max-w-sm text-sm text-slate-600">
+                Add a video recording for this class. Supported mock formats: MP4, MOV, WEBM.
+              </p>
+              <div className="mt-5 grid w-full max-w-md gap-3 sm:grid-cols-2">
+                <div className="rounded-xl border border-blue-100 bg-white px-3 py-2.5 text-left text-sm font-semibold text-slate-500">
+                  Recording title
+                </div>
+                <div className="rounded-xl border border-blue-100 bg-white px-3 py-2.5 text-left text-sm font-semibold text-slate-500">
+                  Class date
+                </div>
+              </div>
+              <button type="button" className="mt-4 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-blue-700">
+                Upload Recording
+              </button>
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h3 className="mb-4 text-lg font-extrabold text-slate-900">Uploaded Recordings</h3>
+            <div className="space-y-3">
+              {[
+                { title: "Week 1 Reading Introduction", date: "2026-05-04", duration: "38 min" },
+                { title: "Audio Practice Review", date: "2026-05-06", duration: "42 min" },
+                { title: "Follow-Reading Feedback Class", date: "2026-05-08", duration: "35 min" },
+              ].map((video) => (
+                <div key={video.title} className="flex items-center justify-between gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-white">
+                      <svg className="ml-0.5 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate font-bold text-slate-900">{video.title}</p>
+                      <p className="text-sm font-medium text-slate-500">{video.date} • {video.duration}</p>
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 gap-2">
+                    <button type="button" className="rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-100">
+                      View
+                    </button>
+                    <button type="button" className="rounded-lg bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-200">
+                      Edit
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
         </div>
       </div>
     </>
@@ -238,6 +305,193 @@ function StudentDetail() {
         <LearningHistoryTable studentName={studentDetail.name} showStudentName={false} />
       </div>
     </>
+  );
+}
+
+function TeacherResourceManagement() {
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
+  const selectedBook = libraryBooks.find((book) => book.id === selectedBookId);
+  const selectedDetails = selectedBook ? audioBookDetails[selectedBook.id] : null;
+  const courseFolders = assignedCourses.map((course, index) => ({
+    ...course,
+    books: libraryBooks.filter((_, bookIndex) => bookIndex % assignedCourses.length === index || bookIndex === index),
+  }));
+  const teacherPlaylist = libraryBooks.filter((book) => book.status === "In Progress" || book.status === "Completed");
+
+  return (
+    <div className={selectedBook && selectedDetails ? "pb-32" : ""}>
+      <PageHeader title="Resource Management" description="Review course folders, books, audio resources, and class materials." />
+
+      <div className="mb-8 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="grid gap-3 lg:grid-cols-[1.2fr_repeat(3,minmax(0,0.8fr))]">
+          <input
+            type="search"
+            placeholder="Search resources"
+            className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-medium text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-300 focus:bg-white"
+          />
+          <select className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-semibold text-slate-600 outline-none focus:border-emerald-300 focus:bg-white">
+            <option>Filter by class</option>
+          </select>
+          <select className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-semibold text-slate-600 outline-none focus:border-emerald-300 focus:bg-white">
+            <option>Filter by course</option>
+          </select>
+          <select className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-semibold text-slate-600 outline-none focus:border-emerald-300 focus:bg-white">
+            <option>Sort materials</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="space-y-5">
+        {courseFolders.map((folder, index) => (
+          <section key={folder.id} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-100 bg-slate-50 px-5 py-4">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-sm font-extrabold text-emerald-700">
+                    C{index + 1}
+                  </div>
+                  <div>
+                    <h2 className="font-extrabold text-slate-900">{folder.title}</h2>
+                    <p className="text-xs font-semibold text-slate-500">Teacher: {folder.teacher} • {folder.books.length} materials</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <TeacherResourceRows books={folder.books} selectedBookId={selectedBookId} onSelect={setSelectedBookId} />
+          </section>
+        ))}
+
+        <section className="overflow-hidden rounded-2xl border border-blue-200 bg-white shadow-sm">
+          <div className="border-b border-blue-100 bg-blue-50 px-5 py-4">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="font-extrabold text-slate-900">Teacher Playlist</h2>
+                <p className="text-xs font-semibold text-slate-500">A visual playlist for resources to preview before assigning or discussing in class.</p>
+              </div>
+              <button type="button" className="rounded-xl bg-white px-4 py-2 text-sm font-bold text-blue-700 shadow-sm hover:bg-blue-100">
+                Create Playlist
+              </button>
+            </div>
+          </div>
+          <TeacherResourceRows books={teacherPlaylist} selectedBookId={selectedBookId} onSelect={setSelectedBookId} />
+        </section>
+      </div>
+
+      {selectedBook && selectedDetails && (
+        <TeacherAudioBar
+          bookId={selectedBook.id}
+          title={selectedBook.title}
+          courseName={selectedDetails.courseName}
+          current={selectedDetails.current}
+          duration={selectedDetails.duration}
+          progress={selectedBook.progress}
+        />
+      )}
+    </div>
+  );
+}
+
+function TeacherResourceRows({
+  books,
+  selectedBookId,
+  onSelect,
+}: {
+  books: typeof libraryBooks;
+  selectedBookId: string | null;
+  onSelect: (bookId: string) => void;
+}) {
+  return (
+    <div>
+      <div className="hidden border-b border-slate-100 px-5 py-3 sm:block">
+        <div className="grid grid-cols-[44px_1fr_90px_110px_140px] items-center gap-4 text-xs font-bold uppercase tracking-wide text-slate-500">
+          <span>#</span>
+          <span>Material title</span>
+          <span>Level</span>
+          <span>Status</span>
+          <span className="text-right">Action</span>
+        </div>
+      </div>
+      <div className="divide-y divide-slate-100">
+        {books.map((book, index) => {
+          const isSelected = selectedBookId === book.id;
+          return (
+            <div key={book.id} className={`grid grid-cols-[44px_1fr_90px_110px_140px] items-center gap-4 px-5 py-4 transition-colors hover:bg-slate-50/70 ${isSelected ? "bg-emerald-50/70" : ""}`}>
+              <button
+                type="button"
+                onClick={() => onSelect(book.id)}
+                className={`flex h-9 w-9 items-center justify-center rounded-full text-xs font-extrabold ${isSelected ? "bg-emerald-600 text-white" : "bg-emerald-50 text-emerald-700"}`}
+                aria-label={`Preview ${book.title}`}
+              >
+                {isSelected ? "▶" : index + 1}
+              </button>
+              <div className="min-w-0">
+                <button type="button" onClick={() => onSelect(book.id)} className="block w-full truncate text-left font-bold text-slate-900">
+                  {book.title}
+                </button>
+                <p className="mt-1 text-xs font-semibold text-slate-500">Audio and reading resource</p>
+              </div>
+              <span className="rounded-lg bg-blue-50 px-2 py-1 text-xs font-bold text-blue-700">Level {book.level}</span>
+              <span className="text-sm font-semibold text-slate-500">{isSelected ? "Previewing" : book.status}</span>
+              <div className="flex justify-end gap-2">
+                <button type="button" onClick={() => onSelect(book.id)} className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-emerald-700">
+                  Preview
+                </button>
+                <button type="button" className="rounded-xl bg-slate-50 px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100">
+                  Assign
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function TeacherAudioBar({
+  title,
+  courseName,
+  current,
+  duration,
+  progress,
+}: {
+  bookId: string;
+  title: string;
+  courseName: string;
+  current: string;
+  duration: string;
+  progress: number;
+}) {
+  const playerProgress = Math.max(progress, 15);
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 shadow-[0_-10px_30px_rgba(15,23,42,0.10)] backdrop-blur md:left-72">
+      <div className="mx-auto flex max-w-7xl flex-col gap-3 lg:flex-row lg:items-center">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-xs font-bold text-emerald-600">{courseName}</p>
+          <h3 className="truncate text-sm font-extrabold text-slate-900">{title}</h3>
+        </div>
+        <div className="flex flex-1 items-center gap-4 lg:max-w-xl">
+          <button className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white shadow-md hover:bg-emerald-700">
+            <svg className="ml-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+            </svg>
+          </button>
+          <div className="flex-1">
+            <div className="mb-1 flex justify-between text-xs font-medium text-slate-500">
+              <span>{current}</span>
+              <span>{duration}</span>
+            </div>
+            <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+              <div className="h-full rounded-full bg-emerald-500" style={{ width: `${playerProgress}%` }} />
+            </div>
+          </div>
+        </div>
+        <button type="button" className="shrink-0 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-2.5 text-center text-sm font-bold text-emerald-700 hover:bg-emerald-100">
+          View Resource Notes
+        </button>
+      </div>
+    </div>
   );
 }
 

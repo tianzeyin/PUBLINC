@@ -6,6 +6,7 @@ export type TeacherView =
   | "class-detail"
   | "students"
   | "student-detail"
+  | "resources"
   | "report"
   | "course-progress"
   | "account";
@@ -14,6 +15,7 @@ export const teacherNavItems: { name: string; view: TeacherView; icon: string }[
   { name: "Teacher Home", view: "home", icon: "🏠" },
   { name: "My Classes", view: "classes", icon: "📚" },
   { name: "Student List", view: "students", icon: "👥" },
+  { name: "Resource Management", view: "resources", icon: "🎧" },
   { name: "Class Learning Report", view: "report", icon: "📊" },
   { name: "Course / Book Progress", view: "course-progress", icon: "📖" },
   { name: "Account Management", view: "account", icon: "⚙️" },
