@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import AccountExpiryTable from "./AccountExpiryTable";
 import ClassManagementTable from "./ClassManagementTable";
 import CourseManagementTable from "./CourseManagementTable";
-import InstitutionFormMock from "./InstitutionFormMock";
 import InstitutionLayout from "./InstitutionLayout";
 import InstitutionProfileCard from "./InstitutionProfileCard";
 import InstitutionStatCard from "./InstitutionStatCard";
@@ -13,14 +13,18 @@ import StudentManagementTable from "./StudentManagementTable";
 import TeacherManagementTable from "./TeacherManagementTable";
 import {
   accountSummary,
-  authorizedBooks,
   institutionProfile,
   institutionStats,
   learningOverview,
+  studentAccountCredits,
+  teacherAccountLimit,
 } from "@/data/institutionMockData";
 
 export default function InstitutionDashboard() {
-  const [activeView, setActiveView] = useState<InstitutionView>("home");
+  const searchParams = useSearchParams();
+  const section = searchParams.get("section");
+  const initialView = isInstitutionView(section) ? section : "home";
+  const [activeView, setActiveView] = useState<InstitutionView>(initialView);
 
   return (
     <InstitutionLayout activeView={activeView} onSelect={setActiveView}>
@@ -33,6 +37,10 @@ export default function InstitutionDashboard() {
       {activeView === "personal" && <PersonalCenter />}
     </InstitutionLayout>
   );
+}
+
+function isInstitutionView(value: string | null): value is InstitutionView {
+  return value === "home" || value === "students" || value === "teachers" || value === "classes" || value === "courses" || value === "accounts" || value === "personal";
 }
 
 function PageHeader({ title, description }: { title: string; description?: string }) {
@@ -108,20 +116,34 @@ function StudentManagement() {
   return (
     <>
       <PageHeader title="Student Management" description="Manage student accounts, classes, course assignment, status, and expiry dates." />
+      <StudentCreditSummary />
       <ActionBar labels={["Create Student Account", "Export Student List"]} />
       <FilterBar searchPlaceholder="Search students" filters={["Filter by class", "Filter by account status", "Filter by assigned course", "Sort by expiry date"]} />
-      <div className="mb-8">
+      <div>
         <StudentManagementTable />
       </div>
-      <SectionTitle accent="emerald">Student Account Forms</SectionTitle>
-      <div className="grid gap-4 lg:grid-cols-2">
-        <InstitutionFormMock title="Create student account" fields={["Student name", "Phone/account", "Initial class", "Assigned courses"]} actionLabel="Create Student Account" />
-        <InstitutionFormMock title="Edit student information" fields={["Student name", "Phone/account", "Class", "Account status"]} actionLabel="Save Student Changes" />
-        <InstitutionFormMock title="Assign student to class" fields={["Select student", "Select class", "Effective date"]} actionLabel="Assign Class" />
-        <InstitutionFormMock title="Reset student password" fields={["Select student", "New password", "Confirm password"]} actionLabel="Reset Password" />
-        <InstitutionFormMock title="Change account expiry date" fields={["Select student", "Current expiry date", "New expiry date"]} actionLabel="Change Expiry Date" />
-      </div>
     </>
+  );
+}
+
+function StudentCreditSummary() {
+  const usedPercent = Math.round((studentAccountCredits.usedCredits / studentAccountCredits.totalCredits) * 100);
+
+  return (
+    <section className="mb-6 rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-emerald-50 p-5 shadow-sm">
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wide text-blue-700">Student account credits</p>
+          <h2 className="mt-1 text-2xl font-extrabold text-slate-900">{studentAccountCredits.remainingCredits} credits left</h2>
+        </div>
+        <span className="rounded-xl bg-white px-3 py-2 text-xs font-bold text-blue-700 shadow-sm">
+          {usedPercent}% used
+        </span>
+      </div>
+      <div className="h-3 overflow-hidden rounded-full bg-white">
+        <div className="h-full rounded-full bg-blue-600" style={{ width: `${usedPercent}%` }} />
+      </div>
+    </section>
   );
 }
 
@@ -129,21 +151,34 @@ function TeacherManagement() {
   return (
     <>
       <PageHeader title="Teacher Management" description="Manage teacher accounts, assigned classes, permissions, and login status." />
+      <TeacherAccountLimitSummary />
       <ActionBar labels={["Create Teacher Account", "Export Teacher List"]} />
       <FilterBar searchPlaceholder="Search teachers" filters={["Filter by assigned class", "Filter by account status", "Sort by last login time"]} />
-      <div className="mb-8">
+      <div>
         <TeacherManagementTable />
       </div>
-      <SectionTitle accent="emerald">Teacher Account Forms</SectionTitle>
-      <div className="grid gap-4 lg:grid-cols-2">
-        <InstitutionFormMock title="Create teacher account" fields={["Teacher name", "Phone/account", "Assigned classes", "Permissions"]} actionLabel="Create Teacher Account" />
-        <InstitutionFormMock title="Edit teacher information" fields={["Teacher name", "Phone/account", "Account status", "Contact note"]} actionLabel="Save Teacher Changes" />
-        <InstitutionFormMock title="Assign teacher to class" fields={["Select teacher", "Select class", "Role in class"]} actionLabel="Assign Class" />
-        <InstitutionFormMock title="Remove teacher from class" fields={["Select teacher", "Assigned class", "Removal date"]} actionLabel="Remove Class" />
-        <InstitutionFormMock title="Reset teacher password" fields={["Select teacher", "New password", "Confirm password"]} actionLabel="Reset Password" />
-        <InstitutionFormMock title="Set teacher permissions" fields={["Select teacher", "Course access", "Report access", "Account permissions"]} actionLabel="Set Permissions" />
-      </div>
     </>
+  );
+}
+
+function TeacherAccountLimitSummary() {
+  const usedPercent = Math.round((teacherAccountLimit.usedAccounts / teacherAccountLimit.totalAccounts) * 100);
+
+  return (
+    <section className="mb-6 rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-blue-50 p-5 shadow-sm">
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">Teacher account limit</p>
+          <h2 className="mt-1 text-2xl font-extrabold text-slate-900">{teacherAccountLimit.remainingAccounts} teacher accounts left</h2>
+        </div>
+        <span className="rounded-xl bg-white px-3 py-2 text-xs font-bold text-emerald-700 shadow-sm">
+          {usedPercent}% used
+        </span>
+      </div>
+      <div className="h-3 overflow-hidden rounded-full bg-white">
+        <div className="h-full rounded-full bg-emerald-600" style={{ width: `${usedPercent}%` }} />
+      </div>
+    </section>
   );
 }
 
@@ -166,25 +201,9 @@ function ClassManagement() {
 function CourseManagement() {
   return (
     <>
-      <PageHeader title="Course Management" description="Authorized courses, assignment actions, book previews, and course progress controls." />
-      <ActionBar labels={["View Authorized Courses", "Assign Course to Class", "Assign Course to Student", "Remove Course from Class/Student", "View Books Inside Course", "View Course Progress"]} />
+      <PageHeader title="Course Management" description="Review authorized courses, class assignments, student reach, and progress." />
       <FilterBar searchPlaceholder="Search courses" filters={["Filter by course level", "Filter by assigned class", "Sort by number of books"]} />
-      <div className="mb-8">
-        <CourseManagementTable />
-      </div>
-      <SectionTitle accent="emerald">Books Inside Selected Course</SectionTitle>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {authorizedBooks.map((book) => (
-          <article key={book.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-sm font-extrabold text-blue-700">
-              BK
-            </div>
-            <h3 className="font-extrabold text-slate-900">{book.title}</h3>
-            <p className="mt-1 text-sm font-medium text-slate-500">{book.course}</p>
-            <span className="mt-4 inline-flex rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">{book.level}</span>
-          </article>
-        ))}
-      </div>
+      <CourseManagementTable />
     </>
   );
 }
@@ -216,6 +235,7 @@ function AccountOpeningExpiry() {
       <div className="mb-5 flex justify-end">
         <ActionButton label="View Expiring Accounts" />
       </div>
+      <FilterBar searchPlaceholder="Search accounts" filters={["Filter by account type", "Filter by account status", "Sort by expiry date"]} />
       <AccountExpiryTable />
     </>
   );

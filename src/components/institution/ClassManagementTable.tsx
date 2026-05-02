@@ -1,6 +1,7 @@
 import { institutionClasses } from "@/data/institutionMockData";
+import Link from "next/link";
 import ProgressBar from "./ProgressBar";
-import { ActionButtons, TableShell } from "./StudentManagementTable";
+import { TableShell } from "./StudentManagementTable";
 
 export default function ClassManagementTable() {
   return (
@@ -23,7 +24,9 @@ export default function ClassManagementTable() {
             <td className="p-4 font-bold text-indigo-600">{row.score}</td>
             <td className="p-4 text-slate-600">{row.activeStudents}</td>
             <td className="p-4 pr-6">
-              <ActionButtons labels={["View Class", "Edit Class", "Assign Teacher", "Assign Readings"]} />
+              <Link href={`/institution/class-detail?class=${row.id}`} className="inline-flex rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-100">
+                View Class
+              </Link>
             </td>
           </tr>
         ))}

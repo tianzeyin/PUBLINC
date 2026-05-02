@@ -1,5 +1,6 @@
 import { institutionTeachers } from "@/data/institutionMockData";
-import { ActionButtons, ChipList, StatusBadge, TableShell } from "./StudentManagementTable";
+import Link from "next/link";
+import { ChipList, StatusBadge, TableShell } from "./StudentManagementTable";
 
 export default function TeacherManagementTable() {
   return (
@@ -21,7 +22,9 @@ export default function TeacherManagementTable() {
             <td className="p-4"><StatusBadge status={teacher.status} /></td>
             <td className="p-4 text-slate-600">{teacher.lastLogin}</td>
             <td className="p-4 pr-6">
-              <ActionButtons labels={["Edit", "Assign Class", "Remove Class", "Reset Password", "Disable/Enable", "Set Permissions"]} />
+              <Link href={`/institution/teacher-edit?teacher=${teacher.id}`} className="inline-flex rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-100">
+                Edit Teacher
+              </Link>
             </td>
           </tr>
         ))}

@@ -1,4 +1,5 @@
 import { institutionStudents } from "@/data/institutionMockData";
+import Link from "next/link";
 
 export default function StudentManagementTable() {
   return (
@@ -22,7 +23,9 @@ export default function StudentManagementTable() {
             <td className="p-4"><StatusBadge status={student.status} /></td>
             <td className="p-4 text-slate-600">{student.expiryDate}</td>
             <td className="p-4 pr-6">
-              <ActionButtons labels={["Edit", "Assign Class", "Reset Password", "Disable/Enable", "Change Expiry"]} />
+              <Link href={`/institution/student-edit?student=${student.id}`} className="inline-flex rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-100">
+                Edit Student
+              </Link>
             </td>
           </tr>
         ))}

@@ -24,6 +24,20 @@ export const institutionStats = [
   { label: "Expiring Accounts", value: "42", tone: "amber" },
 ];
 
+export const studentAccountCredits = {
+  totalCredits: 600,
+  usedCredits: 520,
+  remainingCredits: 80,
+  pendingAccounts: 4,
+  renewalDate: "2026-08-28",
+};
+
+export const teacherAccountLimit = {
+  totalAccounts: 40,
+  usedAccounts: 35,
+  remainingAccounts: 5,
+};
+
 export const learningOverview = [
   { label: "Average reading progress", value: "67%" },
   { label: "Average follow-reading score", value: "86" },
