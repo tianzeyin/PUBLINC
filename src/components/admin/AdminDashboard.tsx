@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import AdminLayout from "./AdminLayout";
 import type { AdminView } from "./AdminSidebar";
 import AdminStatCard from "./AdminStatCard";
@@ -107,7 +108,16 @@ function BookManagement() {
   return (
     <>
       <PageHeader title="Book Management" description="Manage book metadata, content, audio, subtitles, and downloadable resources." />
-      <ActionBar labels={["Add Book", "Batch Import Books", "Download Resource Files"]} />
+      <div className="mb-5 flex flex-wrap gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <Link href="/admin/book-create" className="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-700">
+          Add Book
+        </Link>
+        {["Batch Import Books", "Download Resource Files"].map((label) => (
+          <button key={label} type="button" className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-2.5 text-sm font-bold text-blue-700 transition-colors hover:bg-blue-100">
+            {label}
+          </button>
+        ))}
+      </div>
       <FilterBar searchPlaceholder="Search books" filters={["Filter by level", "Filter by course", "Filter by status", "Sort by updated date"]} />
       <div className="mb-8"><BookManagementTable /></div>
     </>

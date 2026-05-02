@@ -25,20 +25,12 @@ export default function BookManagementTable() {
             <td className="p-4 text-slate-600">{book.files}</td>
             <td className="p-4 text-slate-600">{book.updated}</td>
             <td className="p-4 pr-6">
-              <div className="flex min-w-40 flex-wrap gap-2">
-                <Link
-                  href={`/admin/book-detail?book=${book.id}`}
-                  className="rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-bold text-white hover:bg-blue-700"
-                >
-                  View Details
-                </Link>
-                <Link
-                  href={`/admin/book-edit?book=${book.id}`}
-                  className="rounded-lg bg-blue-50 px-2.5 py-1.5 text-xs font-bold text-blue-700 hover:bg-blue-100"
-                >
-                  Edit
-                </Link>
-              </div>
+              <Link
+                href={`/admin/book-detail?book=${book.id}`}
+                className="inline-flex rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-bold text-white hover:bg-blue-700"
+              >
+                View Details
+              </Link>
             </td>
           </tr>
         ))}

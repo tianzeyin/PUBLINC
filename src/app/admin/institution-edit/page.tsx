@@ -12,6 +12,8 @@ export default function AdminInstitutionEditPage() {
   const searchParams = useSearchParams();
   const institutionId = searchParams.get("institution") ?? "inst-1";
   const institution = adminInstitutions.find((item) => item.id === institutionId) ?? adminInstitutions[0];
+  const studentCreditUsedPercent = Math.round((institution.studentCreditUsed / institution.studentCreditTotal) * 100);
+  const teacherAccountUsedPercent = Math.round((institution.teacherAccountUsed / institution.teacherAccountLimit) * 100);
   const handleSelect = (view: AdminView) => {
     router.push(view === "dashboard" ? "/admin" : `/admin?section=${view}`);
   };
@@ -48,6 +50,28 @@ export default function AdminInstitutionEditPage() {
             <ProgressBar progress={institution.usage} colorClass="bg-emerald-500" />
           </div>
 
+          <section className="mt-6 rounded-2xl border border-blue-100 bg-blue-50 p-5">
+            <h2 className="text-lg font-extrabold text-slate-900">Institution Credit Usage</h2>
+            <div className="mt-4 grid gap-4 lg:grid-cols-2">
+              <CreditUsageCard
+                title="Student account credits"
+                used={institution.studentCreditUsed}
+                total={institution.studentCreditTotal}
+                remaining={institution.studentCreditTotal - institution.studentCreditUsed}
+                percent={studentCreditUsedPercent}
+                colorClass="bg-blue-600"
+              />
+              <CreditUsageCard
+                title="Teacher account limit"
+                used={institution.teacherAccountUsed}
+                total={institution.teacherAccountLimit}
+                remaining={institution.teacherAccountLimit - institution.teacherAccountUsed}
+                percent={teacherAccountUsedPercent}
+                colorClass="bg-emerald-600"
+              />
+            </div>
+          </section>
+
           <div className="mt-6 flex flex-wrap gap-2">
             {["Save Institution", "Manage Account", "Authorize Books/Courses/Packages", "View Usage", "Disable/Enable"].map((label) => (
               <button key={label} type="button" className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-2.5 text-sm font-bold text-blue-700 hover:bg-blue-100">
@@ -72,6 +96,39 @@ export default function AdminInstitutionEditPage() {
         </section>
       </div>
     </AdminLayout>
+  );
+}
+
+function CreditUsageCard({
+  title,
+  used,
+  total,
+  remaining,
+  percent,
+  colorClass,
+}: {
+  title: string;
+  used: number;
+  total: number;
+  remaining: number;
+  percent: number;
+  colorClass: string;
+}) {
+  return (
+    <div className="rounded-2xl bg-white p-4 shadow-sm">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wide text-slate-400">{title}</p>
+          <p className="mt-1 text-xl font-extrabold text-slate-900">{remaining} left</p>
+        </div>
+        <span className="rounded-xl bg-slate-50 px-3 py-2 text-xs font-bold text-slate-600">
+          {used}/{total}
+        </span>
+      </div>
+      <div className="h-3 overflow-hidden rounded-full bg-slate-100">
+        <div className={`h-full rounded-full ${colorClass}`} style={{ width: `${percent}%` }} />
+      </div>
+    </div>
   );
 }
 

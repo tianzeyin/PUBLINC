@@ -124,6 +124,10 @@ export const adminInstitutions = [
     teachers: 35,
     authorized: ["English Reading Level 1", "Audio Reading Practice"],
     usage: 78,
+    studentCreditTotal: 600,
+    studentCreditUsed: 520,
+    teacherAccountLimit: 40,
+    teacherAccountUsed: 35,
     status: "Active",
   },
   {
@@ -135,6 +139,10 @@ export const adminInstitutions = [
     teachers: 28,
     authorized: ["AI Follow-Reading Training"],
     usage: 64,
+    studentCreditTotal: 500,
+    studentCreditUsed: 430,
+    teacherAccountLimit: 32,
+    teacherAccountUsed: 28,
     status: "Active",
   },
   {
@@ -146,6 +154,10 @@ export const adminInstitutions = [
     teachers: 42,
     authorized: ["Full Reading Package"],
     usage: 86,
+    studentCreditTotal: 760,
+    studentCreditUsed: 680,
+    teacherAccountLimit: 48,
+    teacherAccountUsed: 42,
     status: "Active",
   },
   {
@@ -157,6 +169,10 @@ export const adminInstitutions = [
     teachers: 16,
     authorized: ["Reading Extension Course"],
     usage: 39,
+    studentCreditTotal: 300,
+    studentCreditUsed: 210,
+    teacherAccountLimit: 24,
+    teacherAccountUsed: 16,
     status: "Disabled",
   },
 ];
